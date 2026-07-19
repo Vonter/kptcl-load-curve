@@ -1,0 +1,13 @@
+[project]
+name = "kptcl-load-curve"
+version = "0.2.0"
+description = "Archive and dataset of daily load-curve reports published by the Karnataka Power Transmission Corporation Limited (KPTCL)"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "beautifulsoup4>=4.12",
+    "pandas>=2.0",
+    "pyarrow>=14.0",
+    "requests>=2.31",
+    "xlrd>=2.0.1",
+]

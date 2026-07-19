@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this dataset, please cite it as below."
+type: dataset
+authors:
+  - family-names: "Matthew"
+    given-names: "Vivek"
+    orcid: "https://orcid.org/0009-0003-2627-7788"
+title: "KPTCL Load Curve"
+abstract: "Archive and dataset of daily load-curve reports published by the Karnataka Power Transmission Corporation Limited (KPTCL)"
+version: "2026.07.19"
+date-released: 2026-07-19
+url: "https://github.com/Vonter/kptcl-load-curve"
+repository-code: "https://github.com/Vonter/kptcl-load-curve"
+license: ODbL-1.0
+preferred-citation:
+  type: dataset
+  authors:
+    - family-names: "Matthew"
+      given-names: "Vivek"
+      orcid: "https://orcid.org/0009-0003-2627-7788"
+  title: "KPTCL Load Curve"
+  version: "2026.07.19"
+  date-released: 2026-07-19
+  url: "https://github.com/Vonter/kptcl-load-curve"
