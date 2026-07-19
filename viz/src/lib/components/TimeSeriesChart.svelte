@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { AreaY, Dot, Line, Plot, Pointer, RuleX, RuleY } from 'svelteplot';
+	import { AreaY, DifferenceY, Dot, Line, Plot, Pointer, RuleX, RuleY } from 'svelteplot';
 	import ChartTooltip from './ChartTooltip.svelte';
 
 	type Datum = Record<string, string | number | null | Date>;
@@ -22,6 +22,13 @@
 		color: string;
 		opacity?: number;
 	};
+	type DifferenceBand = {
+		comparisonKey: string;
+		metricKey: string;
+		positiveColor: string;
+		negativeColor: string;
+		opacity?: number;
+	};
 
 	let {
 		data,
@@ -35,6 +42,7 @@
 		xTicks,
 		unit = '',
 		band,
+		differenceBand,
 		formatValue = (value: number) => value.toLocaleString('en-IN', { maximumFractionDigits: 1 }),
 		formatX = (value: string | number) => String(value),
 		target
@@ -50,6 +58,7 @@
 		xTicks?: (string | number | Date)[];
 		unit?: string;
 		band?: Band;
+		differenceBand?: DifferenceBand;
 		formatValue?: (value: number) => string;
 		formatX?: (value: string | number) => string;
 		target?: { min: number; max: number; color?: string };
@@ -225,6 +234,19 @@
 						y2={band.upperKey}
 						fill={band.color}
 						fillOpacity={band.opacity ?? 0.12}
+					/>
+				{/if}
+				{#if differenceBand &&
+					visibleSeries.some((item) => item.key === differenceBand.comparisonKey) &&
+					visibleSeries.some((item) => item.key === differenceBand.metricKey)}
+					<DifferenceY
+						data={plotData}
+						x="__x"
+						y1={differenceBand.comparisonKey}
+						y2={differenceBand.metricKey}
+						positiveFill={differenceBand.positiveColor}
+						negativeFill={differenceBand.negativeColor}
+						fillOpacity={differenceBand.opacity ?? 0.14}
 					/>
 				{/if}
 				{#if target}

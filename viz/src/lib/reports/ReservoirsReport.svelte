@@ -118,9 +118,15 @@
 						<TimeSeriesChart
 							data={history}
 							series={[
-								{ key: 'inflow', label: 'Inflow', color: chartColors.green, fill: true },
+								{ key: 'inflow', label: 'Inflow', color: chartColors.green },
 								{ key: 'discharge', label: 'Discharge', color: chartColors.red }
 							]}
+							differenceBand={{
+								comparisonKey: 'discharge',
+								metricKey: 'inflow',
+								positiveColor: chartColors.green,
+								negativeColor: chartColors.red
+							}}
 							formatX={(value) => formatDate(String(value), true)}
 							formatValue={(value) => formatNumber(value, 0)}
 							yLabel="Flow (cusecs)"
