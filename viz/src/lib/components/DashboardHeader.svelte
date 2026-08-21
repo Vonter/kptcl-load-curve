@@ -6,24 +6,24 @@
 
 	let {
 		activeReport,
-		selectedDate,
-		displayDate,
-		minDate,
-		maxDate,
-		disabled,
+		selectedDate = '',
+		displayDate = '',
+		minDate = '',
+		maxDate = '',
+		disabled = false,
 		switcher = $bindable(),
 		onChoose,
 		onDate
 	}: {
-		activeReport: ReportId;
-		selectedDate: string;
-		displayDate: string;
-		minDate: string;
-		maxDate: string;
-		disabled: boolean;
+		activeReport: ReportId | 'workbook';
+		selectedDate?: string;
+		displayDate?: string;
+		minDate?: string;
+		maxDate?: string;
+		disabled?: boolean;
 		switcher?: HTMLElement;
-		onChoose: (id: ReportId, event: MouseEvent) => void;
-		onDate: (date: string) => void;
+		onChoose?: (id: ReportId, event: MouseEvent) => void;
+		onDate?: (date: string) => void;
 	} = $props();
 </script>
 
@@ -35,7 +35,7 @@
 				href={resolve(`/?report=${report.id}${selectedDate ? `&date=${selectedDate}` : ''}`)}
 				class:active={activeReport === report.id}
 				data-report={report.id}
-				onclick={(event) => onChoose(report.id, event)}
+				onclick={(event) => onChoose?.(report.id, event)}
 				aria-current={activeReport === report.id ? 'page' : undefined}
 			>
 				<span class="switch-number">{report.number}</span>
@@ -45,26 +45,38 @@
 		{/each}
 	</nav>
 	<div class="report-utilities">
-		<label class="report-date-control">
-			<input
-				type="date"
-				min={minDate}
-				max={maxDate}
-				value={displayDate}
-				{disabled}
-				onchange={(event) => onDate(event.currentTarget.value)}
-				aria-label="Report date"
-			/>
-		</label>
+		{#if onDate}
+			<label class="report-date-control">
+				<input
+					type="date"
+					min={minDate}
+					max={maxDate}
+					value={displayDate}
+					{disabled}
+					onchange={(event) => onDate(event.currentTarget.value)}
+					aria-label="Report date"
+				/>
+			</label>
+		{/if}
+		<a
+			class="source-link workbook-link"
+			class:active={activeReport === 'workbook'}
+			href={resolve('/workbook')}
+			aria-current={activeReport === 'workbook' ? 'page' : undefined}
+			title="Workbook cell trace"
+			aria-label="Workbook cell trace"
+		>
+			<Icon name="workbook" size={20} />
+		</a>
 		<a
 			class="source-link"
 			href="https://github.com/Vonter/kptcl-load-curve"
 			target="_blank"
 			rel="noreferrer"
+			title="View source repository on GitHub"
 			aria-label="View source repository on GitHub"
 		>
 			<Icon name="github" size={20} />
-			<span>Source</span>
 		</a>
 	</div>
 </header>
@@ -75,7 +87,7 @@
 		top: 0;
 		z-index: 100;
 		display: grid;
-		grid-template-columns: 205px minmax(735px, 1fr) 210px;
+		grid-template-columns: 205px minmax(660px, 1fr) 320px;
 		min-height: 74px;
 		background: var(--ink);
 		color: var(--paper);
@@ -162,12 +174,18 @@
 		white-space: nowrap;
 	}
 	.report-utilities {
-		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
+		display: flex;
+		align-items: stretch;
+		justify-content: flex-end;
 		min-width: 0;
+	}
+
+	.workbook-link {
+		border-right: 1px solid rgba(255, 255, 255, 0.12);
 	}
 	.report-date-control {
 		display: grid;
+		flex: 1 1 auto;
 		align-content: center;
 		gap: 5px;
 		min-width: 0;
@@ -191,18 +209,13 @@
 		opacity: 0.55;
 	}
 	.source-link {
+		position: relative;
 		display: flex;
-		min-width: 0;
+		flex: 0 0 58px;
 		align-items: center;
 		justify-content: center;
-		gap: 7px;
 		padding: 10px 8px;
-		font-family: var(--font-mono);
-		font-size: 0.58rem;
-		font-weight: 750;
-		letter-spacing: 0.06em;
 		text-decoration: none;
-		text-transform: uppercase;
 		color: rgba(255, 255, 255, 0.72);
 		transition:
 			background 150ms ease,
@@ -212,9 +225,22 @@
 		background: rgba(255, 255, 255, 0.06);
 		color: white;
 	}
+	.source-link.active {
+		background: rgba(246, 193, 54, 0.1);
+		color: white;
+	}
+	.source-link.active::after {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 4px;
+		background: var(--yellow);
+		content: '';
+	}
 	@media (max-width: 1200px) {
 		.top-panel {
-			grid-template-columns: 180px minmax(700px, 1fr) 195px;
+			grid-template-columns: 180px minmax(640px, 1fr) 290px;
 			overflow-x: auto;
 		}
 		.brand-plate strong {
@@ -245,8 +271,11 @@
 			padding: 1px 0;
 		}
 		.source-link {
+			flex: 0 0 46px;
 			padding: 5px;
-			font-size: 0.52rem;
+		}
+		.workbook-link {
+			display: none;
 		}
 		.report-switcher {
 			display: flex;

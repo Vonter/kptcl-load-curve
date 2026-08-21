@@ -1,5 +1,5 @@
 import { base } from '$app/paths';
-import type { DashboardData, DateReports, HistoricalData } from './types';
+import type { DashboardData, DateReports, HistoricalData, WorkbookData } from './types';
 
 const reportYears = new Map<string, DateReports>();
 
@@ -11,6 +11,7 @@ async function loadJson<T>(path: string, label: string): Promise<T> {
 
 export const loadDashboard = () => loadJson<DashboardData>('dashboard.json', 'Data');
 export const loadHistorical = () => loadJson<HistoricalData>('historical.json', 'Historical data');
+export const loadWorkbook = () => loadJson<WorkbookData>('workbook.json', 'Workbook data');
 
 async function loadReportYear(year: string): Promise<DateReports> {
 	const cached = reportYears.get(year);

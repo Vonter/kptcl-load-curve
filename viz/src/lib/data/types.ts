@@ -181,6 +181,47 @@ export interface ReportSnapshot {
 
 export type DateReports = Record<string, ReportSnapshot>;
 
+export type WorkbookCellType = 'text' | 'number' | 'date' | 'boolean' | 'error' | 'unknown';
+
+export interface WorkbookCell {
+	/** Excel address, such as `AJ5`. */
+	a: string;
+	/** Zero-based row index. */
+	r: number;
+	/** Zero-based column index. */
+	c: number;
+	t: WorkbookCellType;
+	v: string | number | boolean;
+	/** Parsed section the cell belongs to, when it falls inside one. */
+	s?: string;
+}
+
+export interface WorkbookRecord {
+	label: string;
+	values: Record<string, string | number | null>;
+	cells: Record<string, string[]>;
+}
+
+export interface WorkbookDataset {
+	id: string;
+	label: string;
+	table: string;
+	note: string;
+	key: string;
+	fields: string[];
+	records: WorkbookRecord[];
+}
+
+export interface WorkbookData {
+	reportDate: string;
+	workbook: string;
+	sourceUrl: string;
+	sheet: { name: string; rows: number; columns: number };
+	cells: WorkbookCell[];
+	mappedCells: number;
+	datasets: WorkbookDataset[];
+}
+
 export interface HistoricalData {
 	coverage: [string, string];
 	load: LoadDay[];
