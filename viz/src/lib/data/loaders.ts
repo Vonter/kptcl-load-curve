@@ -1,15 +1,33 @@
 import { base } from '$app/paths';
-import type { DashboardData, DateReports, HistoricalData, WorkbookData } from './types';
+import type {
+	DashboardData,
+	DateReports,
+	DownloadCatalog,
+	HistoricalData,
+	WorkbookData
+} from './types';
 
 const reportYears = new Map<string, DateReports>();
+const DEFAULT_DATA_BASE_URL = 'https://kptcl-load-curves.data.vonter.in/kptcl-load-curves';
+
+// Empty VITE_DATA_BASE_URL falls back to data bundled with the site
+const dataBaseUrl = (import.meta.env.VITE_DATA_BASE_URL ?? DEFAULT_DATA_BASE_URL).replace(
+	/\/+$/,
+	''
+);
+
+export function dataUrl(path: string): string {
+	return dataBaseUrl ? `${dataBaseUrl}/${path}` : `${base}/data/${path}`;
+}
 
 async function loadJson<T>(path: string, label: string): Promise<T> {
-	const response = await fetch(`${base}/data/${path}`);
+	const response = await fetch(dataUrl(path));
 	if (!response.ok) throw new Error(`${label} request failed (${response.status})`);
 	return response.json() as Promise<T>;
 }
 
 export const loadDashboard = () => loadJson<DashboardData>('dashboard.json', 'Data');
+export const loadDownloads = () => loadJson<DownloadCatalog>('downloads.json', 'Download catalog');
 export const loadHistorical = () => loadJson<HistoricalData>('historical.json', 'Historical data');
 export const loadWorkbook = () => loadJson<WorkbookData>('workbook.json', 'Workbook data');
 

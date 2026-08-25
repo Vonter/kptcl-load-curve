@@ -1,5 +1,26 @@
 export type NullableNumber = number | null;
 export type ChartDatum = Record<string, string | number | null>;
+export type PreviewValue = string | number | boolean | null;
+
+export interface DownloadFile {
+	file: string;
+	bytes: number;
+}
+
+export interface DownloadDataset {
+	id: string;
+	label: string;
+	description: string;
+	rows: number;
+	columns: { name: string; type: string }[];
+	parquet: DownloadFile;
+	csv: DownloadFile | null;
+	preview: Record<string, PreviewValue>[];
+}
+
+export interface DownloadCatalog {
+	datasets: DownloadDataset[];
+}
 
 export interface LoadPoint extends ChartDatum {
 	hour: number;

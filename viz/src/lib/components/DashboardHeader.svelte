@@ -15,7 +15,7 @@
 		onChoose,
 		onDate
 	}: {
-		activeReport: ReportId | 'workbook';
+		activeReport: ReportId | 'workbook' | 'download';
 		selectedDate?: string;
 		displayDate?: string;
 		minDate?: string;
@@ -59,7 +59,17 @@
 			</label>
 		{/if}
 		<a
-			class="source-link workbook-link"
+			class="source-link utility-link download-link"
+			class:active={activeReport === 'download'}
+			href={resolve('/download')}
+			aria-current={activeReport === 'download' ? 'page' : undefined}
+			title="Download datasets"
+			aria-label="Download datasets"
+		>
+			<Icon name="download" size={20} />
+		</a>
+		<a
+			class="source-link utility-link workbook-link"
 			class:active={activeReport === 'workbook'}
 			href={resolve('/workbook')}
 			aria-current={activeReport === 'workbook' ? 'page' : undefined}
@@ -180,7 +190,7 @@
 		min-width: 0;
 	}
 
-	.workbook-link {
+	.utility-link {
 		border-right: 1px solid rgba(255, 255, 255, 0.12);
 	}
 	.report-date-control {
@@ -249,16 +259,25 @@
 	}
 	@media (max-width: 880px) {
 		.top-panel {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-			overflow: visible;
+			width: 100%;
+			max-width: 100vw;
+			min-width: 0;
+			grid-template-columns: minmax(0, 1fr);
+			overflow-x: clip;
 		}
 		.brand-plate {
+			min-width: 0;
+			overflow: hidden;
 			height: 48px;
 			border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+			padding-right: 110px;
 		}
 		.report-utilities {
-			grid-column: 2;
-			grid-row: 1;
+			position: absolute;
+			top: 0;
+			right: 0;
+			height: 48px;
+			width: max-content;
 			border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 		}
 		.report-date-control {
@@ -279,6 +298,8 @@
 		}
 		.report-switcher {
 			display: flex;
+			width: 100%;
+			max-width: 100vw;
 			grid-column: 1 / -1;
 			grid-row: 2;
 			overflow-x: auto;
